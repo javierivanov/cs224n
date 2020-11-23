@@ -31,6 +31,10 @@ class PartialParse(object):
         ### Note: The root token should be represented with the string "ROOT"
         ###
 
+        self.stack = ["ROOT"]
+        self.buffer = sentence
+        self.dependencies = []
+
 
         ### END YOUR CODE
 
@@ -51,6 +55,19 @@ class PartialParse(object):
         ###         3. Right Arc
 
 
+        if transition == "S" and self.buffer:
+            self.stack += [self.buffer[0]]
+            self.buffer = self.buffer[1:]
+        elif len(self.stack) > 1:
+            wj = self.stack.pop()
+            wi = self.stack.pop()
+            if transition == "LA":
+                self.dependencies.append((wj, wi))
+                self.stack.append(wj)
+            elif transition == "RA":
+                self.dependencies.append((wi, wj))
+                self.stack.append(wi)
+            
         ### END YOUR CODE
 
     def parse(self, transitions):
